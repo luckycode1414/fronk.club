@@ -45,6 +45,17 @@ const gasPrice = "333333333333";
 window.web3gl.sendContract(method, abi, contract, args, value, gasLimit, gasPrice);
 ```
 
+Add Custom Token Contract:
+
+```javascript
+const tokenContract = "0xd8Aa1F592B6f0670176958d93cD0c6D3E2627597";
+const tokenSymbol = "PROS";
+const decimals = "18";
+const tokenImage = "https://www.kwamebryan.com/logo.png";
+
+window.web3gl.addTokenFunction(tokenContract,tokenSymbol,decimals,tokenImage);
+```
+
 ## Enable Torus
 
 In `web3/index.js`
@@ -62,28 +73,3 @@ document.body.appendChild(Object.assign(document.createElement("script"), { type
     }
   };
 ```
-
-## Enable WalletConnect
-
-In `web3/index.js`
-
-Uncomment
-
-```javascript
-document.body.appendChild(Object.assign(document.createElement("script"), { type: "text/javascript", src: "https://unpkg.com/@walletconnect/web3-provider@1.2.1/dist/umd/index.min.js" }));
-```
-
-```javascript
-  const providerOptions = {
-    walletconnect: {
-      package: window.WalletConnectProvider.default,
-      options: {
-        infuraId: "00000000000000000000000000000000",
-      },
-    }
-  };
-```
-
-Replace `infuraId: "00000000000000000000000000000000"`
-
-![](https://user-images.githubusercontent.com/19412160/149654154-3a9a5066-1c8b-42cd-90f9-204014b56154.png)
