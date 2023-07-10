@@ -22,4 +22,4 @@ Used to set the network: https://chainlist.org/
 338 Cronos Testnet
 */
 
-window.web3ChainId = 421613;
+window.web3ChainId = 42170;

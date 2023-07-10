@@ -88,12 +88,71 @@
       }
       loadingBar.style.display = "block";
 
-      var script = document.createElement("script");
+        var script = document.createElement("script");
+
+        var myGameInstance = null;
+
       script.src = loaderUrl;
       script.onload = () => {
         createUnityInstance(canvas, config, (progress) => {
-          progressBarFull.style.width = 100 * progress + "%";
+            progressBarFull.style.width = 100 * progress + "%";
+
         }).then((unityInstance) => {
+
+            myGameInstance = unityInstance;
+
+             function switchToAsync() {
+                console.log("switchToAsync2");
+                try {
+                     window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: uweb3.utils.toHex(chain.chainId) }]
+                    })
+                    console.log("Open");
+                    myGameInstance.SendMessage('GetRewards', 'Open');
+                }
+                catch (err) {
+                    if (err.code === 4902) {
+                        try {
+                             window.ethereum.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [
+                                    {
+                                        chainName: chain.name,
+                                        chainId: uweb3.utils.toHex(chain.chainId),
+                                        nativeCurrency: { name: 'ETH', decimals: 18, symbol: 'ETH' },
+                                        rpcUrls: [chain.rpc],
+                                        blockExplorerUrls: [chain.blockscan]
+                                    }
+                                ]
+                            }
+                            )
+                            console.log("Open");
+                            myGameInstance.SendMessage('GetRewards', 'Open');
+
+                        }
+                        catch {
+                            console.log("Close");
+                            myGameInstance.SendMessage('GetRewards', 'Close');
+
+                        }
+                    }
+
+                    if (err.code === 4001) {
+                        console.log("Close");
+                        myGameInstance.SendMessage('GetRewards', 'Close');
+
+                    }
+                }
+            }
+
+            window.switchTo = () => {
+                // metamask ...
+                switchToAsync();
+            };
+
+            
+
           loadingBar.style.display = "none";
           fullscreenButton.onclick = () => {
             unityInstance.SetFullscreen(1);
